@@ -1,0 +1,25 @@
+[package]
+name = "transactions_crawler"
+version = "0.1.0"
+edition = "2021"
+license-file = "LICENSE"
+description = "Historical Solana transactions crawling tool"
+repository = "https://github.com/mrgnlabs/transactions-crawler"
+documentation = "https://docs.rs/transactions-crawler"
+readme = "README.md"
+keywords = ["solana", "transaction", "crawling", "indexing"]
+
+[dependencies]
+env_logger = "0.9.3"
+log = "0.4.17"
+solana-client = "1.14.7"
+solana-sdk = "1.14.7"
+solana-measure = "1.14.7"
+solana-transaction-status = "1.14.7"
+anyhow = "1.0"
+futures = "0.3.25"
+tokio = { version = "1.21.2", features = ["full"] }
+chrono = "0.4.23"
+chrono-tz = "0.8.0"
+concurrent-queue = "2.0.0"
+serde = "1.0.147"
