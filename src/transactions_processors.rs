@@ -1,8 +1,9 @@
-use crate::Context;
 use chrono::{Local, TimeZone};
 use std::{sync::Arc, time::Duration};
 
-pub async fn print_transactions_to_screen(ctx: Arc<Context>) {
+use crate::transactions_crawler::TransactionsCrawlerContext;
+
+pub async fn print_transactions_to_screen(ctx: Arc<TransactionsCrawlerContext>) {
     loop {
         let mut transactions_data = vec![];
         {
@@ -37,7 +38,7 @@ pub async fn print_transactions_to_screen(ctx: Arc<Context>) {
     }
 }
 
-pub async fn consume_transactions(ctx: Arc<Context>) {
+pub async fn consume_transactions(ctx: Arc<TransactionsCrawlerContext>) {
     loop {
         let mut transactions_data = vec![];
         {
