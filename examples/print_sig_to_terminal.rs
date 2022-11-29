@@ -10,7 +10,7 @@ use transactions_crawler::{
 async fn main() {
     env_logger::init();
 
-    let sig_crawler = SignaturesCrawler::new_with_config(SignaturesCrawlerConfig::new(vec![
+    let config = SignaturesCrawlerConfig::new(vec![
         Target {
             address: pubkey!("8kNQpnBYGznxxjZVX5Ss9ika6KkFCVMgu7BRJJhCV4bi"),
             before: None,
@@ -21,7 +21,9 @@ async fn main() {
             before: None,
             until: None,
         },
-    ]));
+    ]);
+
+    let sig_crawler = SignaturesCrawler::new_with_config(&config);
 
     let signature_processor =
         |ctx: Arc<SignaturesCrawlerContext>| async move { print_signatures_to_screen(ctx).await };

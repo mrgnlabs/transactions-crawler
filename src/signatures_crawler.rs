@@ -84,7 +84,7 @@ impl SignaturesCrawler {
         Self { context }
     }
 
-    pub fn new_with_config(config: SignaturesCrawlerConfig) -> Self {
+    pub fn new_with_config(config: &SignaturesCrawlerConfig) -> Self {
         let context = SignaturesCrawlerContext::new(&config);
         Self { context }
     }
