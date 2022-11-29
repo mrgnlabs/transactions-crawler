@@ -45,7 +45,7 @@ impl SignaturesCrawlerConfig {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct SignatureData {
     pub indexing_address: Pubkey,
     pub signature: RpcConfirmedTransactionStatusWithSignature,

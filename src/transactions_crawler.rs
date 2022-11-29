@@ -66,7 +66,7 @@ pub struct TransactionData {
     pub transaction: EncodedConfirmedTransactionWithStatusMeta,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct SignatureData {
     pub indexing_address: Pubkey,
     pub signature: Signature,
