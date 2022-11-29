@@ -54,7 +54,7 @@ pub struct SignatureData {
 #[derive(Clone)]
 pub struct SignaturesCrawlerContext {
     pub config: Arc<SignaturesCrawlerConfig>,
-    rpc_client: Arc<RpcClient>,
+    pub rpc_client: Arc<RpcClient>,
     pub signature_queue: Arc<Mutex<ConcurrentQueue<SignatureData>>>,
 }
 
