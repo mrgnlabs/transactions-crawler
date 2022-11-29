@@ -11,3 +11,4 @@ pub struct Target {
 pub const DEFAULT_RPC_ENDPOINT: &str = "https://api.mainnet-beta.solana.com";
 pub const DEFAULT_SIGNATURE_FETCH_LIMIT: usize = 1_000;
 pub const DEFAULT_MAX_PENDING_SIGNATURES: usize = 10_000;
+pub const DEFAULT_MONITOR_INTERVAL: u64 = 5;

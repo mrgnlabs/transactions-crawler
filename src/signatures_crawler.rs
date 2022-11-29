@@ -1,7 +1,7 @@
 use anyhow::Result;
 use concurrent_queue::ConcurrentQueue;
 use futures::{future::join_all, Future};
-use log::warn;
+use log::{info, warn};
 use solana_client::{
     nonblocking::rpc_client::RpcClient, rpc_client::GetConfirmedSignaturesForAddress2Config,
     rpc_response::RpcConfirmedTransactionStatusWithSignature,
@@ -20,7 +20,8 @@ use std::{str::FromStr, time::Duration};
 use tokio::runtime::Builder;
 
 use crate::common::{
-    Target, DEFAULT_MAX_PENDING_SIGNATURES, DEFAULT_RPC_ENDPOINT, DEFAULT_SIGNATURE_FETCH_LIMIT,
+    Target, DEFAULT_MAX_PENDING_SIGNATURES, DEFAULT_MONITOR_INTERVAL, DEFAULT_RPC_ENDPOINT,
+    DEFAULT_SIGNATURE_FETCH_LIMIT,
 };
 
 #[derive(Debug, Clone)]
@@ -28,6 +29,7 @@ pub struct SignaturesCrawlerConfig {
     pub rpc_endpoint: String,
     pub signature_fetch_limit: usize,
     pub max_pending_signatures: usize,
+    pub monitor_interval: u64,
     pub targets: Vec<Target>,
 }
 
@@ -37,6 +39,7 @@ impl SignaturesCrawlerConfig {
             rpc_endpoint: DEFAULT_RPC_ENDPOINT.to_string(),
             signature_fetch_limit: DEFAULT_SIGNATURE_FETCH_LIMIT,
             max_pending_signatures: DEFAULT_MAX_PENDING_SIGNATURES,
+            monitor_interval: DEFAULT_MONITOR_INTERVAL,
             targets,
         }
     }
@@ -112,8 +115,17 @@ impl SignaturesCrawler {
             let signature_processor = signature_processor.clone();
             async move { signature_processor(context).await }
         });
+        let monitor_handle = tokio::spawn({
+            let context = context.clone();
+            async move { Self::monitor(context).await }
+        });
 
-        join_all([fetch_signatures_handle, signature_transactions_handle]).await;
+        join_all([
+            fetch_signatures_handle,
+            signature_transactions_handle,
+            monitor_handle,
+        ])
+        .await;
 
         Ok(())
     }
@@ -227,6 +239,23 @@ impl SignaturesCrawler {
                             Some(Signature::from_str(&last_sig.signature).unwrap());
                     }
                 });
+        }
+    }
+
+    async fn monitor(ctx: Arc<SignaturesCrawlerContext>) {
+        let mut main_timing = Measure::start("main");
+
+        loop {
+            tokio::time::sleep(Duration::from_secs(ctx.config.monitor_interval)).await;
+            main_timing.stop();
+            let current_fetch_time = main_timing.as_s();
+
+            let sig_queue_size = ctx.signature_queue.lock().unwrap().len();
+
+            info!(
+                "Time: {:.1}s | sig Q size: {}",
+                current_fetch_time, sig_queue_size,
+            );
         }
     }
 }

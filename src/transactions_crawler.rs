@@ -25,10 +25,10 @@ use std::{str::FromStr, time::Duration};
 use tokio::{join, runtime::Builder};
 
 use crate::common::{
-    Target, DEFAULT_MAX_PENDING_SIGNATURES, DEFAULT_RPC_ENDPOINT, DEFAULT_SIGNATURE_FETCH_LIMIT,
+    Target, DEFAULT_MAX_PENDING_SIGNATURES, DEFAULT_MONITOR_INTERVAL, DEFAULT_RPC_ENDPOINT,
+    DEFAULT_SIGNATURE_FETCH_LIMIT,
 };
 
-pub const DEFAULT_MONITOR_INTERVAL: u64 = 5;
 pub const DEFAULT_MAX_CONCURRENT_REQUESTS: usize = 10;
 
 #[derive(Debug, Clone)]
