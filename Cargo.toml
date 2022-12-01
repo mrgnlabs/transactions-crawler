@@ -16,6 +16,7 @@ solana-measure = "1.14.7"
 solana-transaction-status = "1.14.7"
 
 env_logger = "0.9.3"
+json = "0.12.4"
 log = "0.4.17"
 anyhow = "1.0"
 futures = "0.3.25"
